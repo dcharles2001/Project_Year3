@@ -1,32 +1,45 @@
 #include "mbed.h"
 #include <iostream>
 
+
 using namespace std;
 
-DigitalOut motorLA(D6);
-DigitalOut motorLB(D5);
-DigitalOut EnableL293D(D7);
-DigitalOut test(D4);
+DigitalOut motorLA(D8);
+DigitalOut motorLB(D9);
+DigitalOut EnableLeft(D10);
 
-void motorInit()
-{
-    motorLA = 0;
-    motorLB = 0;
-    EnableL293D = 1;
+DigitalOut motorRA(D6);
+DigitalOut motorRB(D5);
+DigitalOut EnableRight(D7);
+
+AnalogIn LDR(A1);
+
+void motorSetup(){
+    EnableRight = 1;
+    EnableLeft = 1;
 }
-
-void motorForward()
-{
+void motorsForward(){
     motorLA = 1;
     motorLB = 0;
-    EnableL293D = 1;
+    motorRA = 0;
+    motorRB = 1;
 }
+void motorsBackward(){
+    motorLA = 0;
+    motorLB = 1;
+    motorRA = 1;
+    motorRB = 0;
+}
+
 int main()
 {
-    void motorInit();
+    float lightValue = 0;
+    motorSetup();
     while (true) {
-        void motorForward();
-        test = 1;
+        motorsForward();
+        lightValue = LDR.read();
+        cout<<"LDR value: "<<lightValue<<endl;
+
     }
 
 }
