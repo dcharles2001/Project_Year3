@@ -21,7 +21,7 @@ int Dht11::read()
     for (int i=0; i< 5; i++) bits[i] = 0;
     
     // Verify sensor settled after boot
-    while(_timer.read_ms() < 1500) {}
+    while(_timer.read_ms() < 1100) {}
     _timer.stop();
 
     // Notify it we are ready to read

@@ -1,4 +1,5 @@
 #include "mbed.h"
+//#include "Temp&Humidity.h"
 #include "Dht11.h"
 
 using namespace std;
@@ -21,7 +22,7 @@ DigitalOut EnableRight(D7);
 
 //////DHT11
 //DigitalIn DHT11(D2);
-Dht11 sensor(D2);
+Dht11 DHT11(D2);
 
 void motorSetup(){
     EnableRight = 1;
@@ -77,7 +78,7 @@ int main()
         if (LeftLF && !RightLF){
             motorsLeft();
         }*/
-        sensor.read();
-        printf("T: %d, H: %d\r\n", sensor.getCelsius(), sensor.getHumidity());
+        DHT11.read();
+        printf("T: %d, H: %d\r\n", DHT11.getCelsius(), DHT11.getHumidity());
     }
 }
