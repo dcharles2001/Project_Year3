@@ -20,7 +20,8 @@ DigitalOut motorRB(D5);
 DigitalOut EnableRight(D7);
 
 //////DHT11
-DigitalIn
+//DigitalIn DHT11(D2);
+Dht11 sensor(D2);
 
 void motorSetup(){
     EnableRight = 1;
@@ -63,7 +64,7 @@ int main()
 {
     motorSetup();
     while (true) {
-        
+        /*
         if (LeftLF && RightLF){
             motorsForward();
         }
@@ -75,6 +76,8 @@ int main()
         }
         if (LeftLF && !RightLF){
             motorsLeft();
-        }
+        }*/
+        sensor.read();
+        printf("T: %d, H: %d\r\n", sensor.getCelsius(), sensor.getHumidity());
     }
 }

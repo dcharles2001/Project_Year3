@@ -27,7 +27,7 @@ int Dht11::read()
     // Notify it we are ready to read
     _pin.output();
     _pin = 0;
-    wait_us(18);
+    wait_us(18000);
     _pin = 1;
     wait_us(40);
     _pin.input();
