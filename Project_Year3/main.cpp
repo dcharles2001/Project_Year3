@@ -1,84 +1,36 @@
 #include "mbed.h"
-//#include "Temp&Humidity.h"
-#include "Dht11.h"
+#include "Temp&Humidity.h"
+#include <iostream>
+#include <chrono>
 
 using namespace std;
 
-//////LDR
-AnalogIn LDR (A0);
-float lightValue;
+Dht11 DHT11pin(PF_15);
 
-//////Line Finder
-DigitalIn LeftLF(D4);
-DigitalIn RightLF(D3);
+Thread Thread_Motor;
+Thread Thread_DHT11;
 
-//////Motor
-DigitalOut motorLA(D8);
-DigitalOut motorLB(D9);
-DigitalOut EnableLeft(D10);
-DigitalOut motorRA(D6);
-DigitalOut motorRB(D5);
-DigitalOut EnableRight(D7);
+EventQueue Queue_Motor(1 * EVENTS_EVENT_SIZE);
+EventQueue Queue_DHT11(1 * EVENTS_EVENT_SIZE);
 
-//////DHT11
-//DigitalIn DHT11(D2);
-Dht11 DHT11(D2);
+void Motors(){
+    void LineFollowing();
+}
 
-void motorSetup(){
-    EnableRight = 1;
-    EnableLeft = 1;
-}
-void motorsForward(){
-    motorLA = 1;
-    motorLB = 0;
-    motorRA = 0;
-    motorRB = 1;
-}
-void motorsBackward(){
-    motorLA = 0;
-    motorLB = 1;
-    motorRA = 1;
-    motorRB = 0;
-}
-void motorsStop(){
-    motorLA = 0;
-    motorLB = 0;
-    motorRA = 0;
-    motorRB = 0;
-}
-void motorsLeft(){
-    motorLA = 1;
-    motorLB = 0;
-    motorRA = 0;
-    motorRB = 0;
-}
-void motorsRight(){
-    motorLA = 0;
-    motorLB = 0;
-    motorRA = 1;
-    motorRB = 0;
+void DHT11(){
+    DHT11pin.read();
+    int TEMP = DHT11pin.getCelsius();
+    //int TEMP = DHT11.getFahrenheit();
+    printf("T: %d, H: %d\r\n", TEMP, DHT11pin.getHumidity());
 }
 
 
 
-int main()
-{
-    motorSetup();
-    while (true) {
-        /*
-        if (LeftLF && RightLF){
-            motorsForward();
-        }
-        if (!LeftLF && !RightLF){
-            motorsBackward();
-        }
-        if (!LeftLF && RightLF){
-            motorsRight();
-        }
-        if (LeftLF && !RightLF){
-            motorsLeft();
-        }*/
-        DHT11.read();
-        printf("T: %d, H: %d\r\n", DHT11.getCelsius(), DHT11.getHumidity());
-    }
+int main(){
+    void motorSetup();
+    Queue_Motor.call_every(1ms, Motors);
+    Queue_DHT11.call_every(1s, DHT11);
+
+    Thread_Motor.start(callback(&Queue_Motor, &EventQueue::dispatch_forever));
+    Thread_DHT11.start(callback(&Queue_DHT11, &EventQueue::dispatch_forever));
 }
