@@ -1,11 +1,10 @@
 #include "mbed.h"
-#include <iostream>
-
+#include "Dht11.h"
 
 using namespace std;
-#define LDR_PIN PA_3
+
 //////LDR
-AnalogIn LDR (LDR_PIN);
+AnalogIn LDR (A0);
 float lightValue;
 
 //////Line Finder
@@ -19,6 +18,9 @@ DigitalOut EnableLeft(D10);
 DigitalOut motorRA(D6);
 DigitalOut motorRB(D5);
 DigitalOut EnableRight(D7);
+
+//////DHT11
+DigitalIn
 
 void motorSetup(){
     EnableRight = 1;
@@ -73,14 +75,6 @@ int main()
         }
         if (LeftLF && !RightLF){
             motorsLeft();
-        }
-        float read = LDR;
-        if(LDR>=0.5f){
-            lightValue = 0;
-            cout<<"off"<<endl;
-        }else{
-            lightValue = 1;
-            printf("LDR reading = %4.2f \n", read);
         }
     }
 }
