@@ -7,7 +7,7 @@ Dht11::Dht11(PinName const &p) : DHT11pin(p){
     //Startup requires at leats 1 second before readings
 }
 
-int Dht11::read(){
+int Dht11::readDHT11(){
     //Data receive buffer
     uint8_t bits[5];
     uint8_t cnt = 7;
@@ -82,3 +82,4 @@ int Dht11::getCelsius() {
 int Dht11::getHumidity() {
     return(humidity);
 }
+

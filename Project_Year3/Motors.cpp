@@ -12,49 +12,55 @@ DigitalOut motorRA(D6);
 DigitalOut motorRB(D5);
 DigitalOut EnableRight(D7);
 
-void motorSetup(){
+void Motors::motorSetup(){
     EnableRight = 1;
     EnableLeft = 1;
+    printf("Motor Setup\n\r");
 }
-void motorsForward(){
+void Motors::motorsForward(){
     motorLA = 1;
     motorLB = 0;
     motorRA = 0;
     motorRB = 1;
+    printf("Forward\n\r");
 }
-void motorsBackward(){
+void Motors::motorsBackward(){
     motorLA = 0;
     motorLB = 1;
     motorRA = 1;
     motorRB = 0;
+    printf("Backward\n\r");
 }
-void motorsStop(){
+void Motors::motorsStop(){
     motorLA = 0;
     motorLB = 0;
     motorRA = 0;
     motorRB = 0;
+    printf("Stop\n\r");
 }
-void motorsLeft(){
+void Motors::motorsLeft(){
     motorLA = 1;
     motorLB = 0;
     motorRA = 0;
     motorRB = 0;
+    printf("Left\n\r");
 }
-void motorsRight(){
+void Motors::motorsRight(){
     motorLA = 0;
     motorLB = 0;
     motorRA = 1;
     motorRB = 0;
+    printf("Right\r\n");
 }
 
 
 
-void LineFollowing(){
+void Motors::LineFollowing(){
     if (LeftLF && RightLF){
-        motorsForward();
+        motorsBackward();
     }
     if (!LeftLF && !RightLF){
-        motorsBackward();
+        motorsForward();
     }
     if (!LeftLF && RightLF){
         motorsRight();

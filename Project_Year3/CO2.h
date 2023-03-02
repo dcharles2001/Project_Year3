@@ -5,7 +5,10 @@
 
 class CO2{
     public:
-        
+        void ReadCO2();
+    private:
+        uint16_t adc_rd;
+
 };
 
 #endif

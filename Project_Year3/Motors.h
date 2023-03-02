@@ -9,7 +9,7 @@ class Motors{
         void motorsForward();
         void motorsBackward();
         void motorsStop();
-        void mototsLeft();
+        void motorsLeft();
         void motorsRight();
         void LineFollowing();
 };
