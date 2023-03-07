@@ -5,7 +5,8 @@
 
 class LDR{
     public:
-
+        void ReadLDR();
+        int LDR;
 };
 
 #endif
