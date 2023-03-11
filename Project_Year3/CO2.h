@@ -5,17 +5,18 @@
 
 class CO2{
     public:
-        void ReadCO2();
-        void CalculatePartsPerMinute();
-        uint16_t ppm;
+        void CO2setup();                             // Setup the Environmental sensor
+        void ReadCO2();                              // Function to read the sensor
+        void CalculatePartsPerMinute();              // Function to calculate PPM
+        uint16_t ppm;                                // Parts Per minute
     private:
-        uint16_t adc_rd;
-        const double Rl = 5000.0;                    // Rl (Ohm) - Load resistance
-        const double Vadc_33 = 0.0000503548;         // ADC step 3,3V/65535 0.00503mV (16bit ADC)
+        uint16_t CO2data;                            // Sesnor Data
+        const double Rl = 5000.0;                    // Load resistance
+        const double Vadc = 0.000076295;             // ADC 5V/65535 0.00762mV
         double Vrl;                                  // Output voltage
-        double Rs;                                   // Rs (Ohm) - Sensor resistance
+        double Rs;                                   // Sensor resistance
         double ratio;                                // Rs/Rl ratio
-        double lgPPM;
+        double lgPPM;                                // logPPM
 
 };
 

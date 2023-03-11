@@ -3,21 +3,23 @@
 
 #include "mbed.h"
 
-#define DHTLIB_OK 0
-#define DHTLIB_ERROR_CHECKSUM   -1
-#define DHTLIB_ERROR_TIMEOUT    -2
+// DHT returns
+#define DHT_OK 0
+#define DHT_ERROR_CHECKSUM   -1
+#define DHT_ERROR_TIMEOUT    -2
 
 class Dht11{
-public:
-    Dht11(PinName const &p);
-    int readDHT11();
-    float getFahrenheit();
-    int getCelsius();
-    int getHumidity();
-private:
-    int humidity;
-    int temperature;
-    DigitalInOut DHT11pin;
-    Timer DHT11Startup;
+    public:
+        void DHT11setup();              // function to setup Sensor
+        int readDHT11();                // read the sensor data
+        float getFahrenheit();          // calculate the Fahrenheit temp
+        int getCelsius();               // return the Celsius temp
+        int getHumidity();              // return the Humidity
+    private:
+        int humidity;
+        int temperature;
+        Timer DHT11Startup;             // Timer to give correct start
+
 };
+
 #endif

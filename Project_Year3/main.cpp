@@ -9,14 +9,13 @@
 using namespace std;
 static BufferedSerial serial_port(USBTX, USBRX);
 
-Dht11 DHT11pin(D2);
-
+//Dht11 DHT11pin(D2);
 
 //Class defenitions
 Motors Motor;
 CO2 CO2;
 LDR LDR;
-
+Dht11 DHT11;
 //Thread defenitions
 Thread Thread_Motor;
 Thread Thread_DHT11;
@@ -30,46 +29,43 @@ EventQueue Queue_CO2(1 * EVENTS_EVENT_SIZE);
 EventQueue Queue_LDR(1 * EVENTS_EVENT_SIZE);
 
 //Functions
-void Motors(){
-    //Motor.LineFollowing();
-    Motor.motorsForward();
+void Motors(){                                                  // Read the Line senors and move the motors to match
+    Motor.LineFollowing();
+    //Motor.motorsForward();
 }
 
-void DHT11(){
-    DHT11pin.readDHT11();
-    int TEMP = DHT11pin.getCelsius();
+void DHT11read(){  
+    DHT11.DHT11setup();                                                 // Read the Temp/Humidity sesnor
+    DHT11.readDHT11();
+    int TEMP = DHT11.getCelsius();
     //int TEMP = DHT11.getFahrenheit();
-    printf("T: %d, H: %d\r\n", TEMP, DHT11pin.getHumidity());
+    printf("T: %d, H: %d\r\n", TEMP, DHT11.getHumidity());
 }
 
-void CO2read(){
+void CO2read(){                                                 // Read the Environemntal Sensor and work out PPM
     CO2.ReadCO2();
     CO2.CalculatePartsPerMinute();
-    printf("Environmental Sensor Value %d\n\r", CO2.ppm);
-    //wait_us(1000000);  
+    printf("Environmental Sensor Value %d\n\r", CO2.ppm); 
 }
 
-void LDRread(){
+void LDRread(){                                                 // Read the LDR                                  
     LDR.ReadLDR();
     printf("LDR: %d \n", LDR.LDR);
-    //wait_us(1000);
 }
-
-
 
 
 int main(){
-    // Set up the serial port to Baud 115200
-    serial_port.set_baud(115200);
+    serial_port.set_baud(115200);                               // Set up the serial port to Baud 115200
 
-    Motor.motorSetup();
-    Queue_Motor.call_every(1s, Motors);
-    Queue_DHT11.call_every(1s, DHT11);
-    Queue_CO2.call_every(1s, CO2read);
-    Queue_LDR.call_every(1s, LDRread);
+    Motor.motorSetup();                                         // Set up motor drivers
 
-    //Thread_Motor.start(callback(&Queue_Motor, &EventQueue::dispatch_forever));
-    Thread_DHT11.start(callback(&Queue_DHT11, &EventQueue::dispatch_forever));
-    Thread_CO2.start(callback(&Queue_CO2, &EventQueue::dispatch_forever));
-    Thread_LDR.start(callback(&Queue_LDR, &EventQueue::dispatch_forever));
+    Queue_Motor.call_every(100ms, Motors);                      // Call the motor function every 100ms
+    Queue_DHT11.call_every(1s, DHT11read);                          // Call the Temp/Humidity sensor every 1s
+    Queue_CO2.call_every(1s, CO2read);                          // Call the Environmental sensor every 1s
+    Queue_LDR.call_every(1s, LDRread);                          // Call the LDR every 1s
+
+    Thread_Motor.start(callback(&Queue_Motor, &EventQueue::dispatch_forever));      // Start thread for the motors
+    Thread_DHT11.start(callback(&Queue_DHT11, &EventQueue::dispatch_forever));      // Start thread for the Temp/Humidity Sensor
+    Thread_CO2.start(callback(&Queue_CO2, &EventQueue::dispatch_forever));          // Start thread for the Environmental Sensor
+    Thread_LDR.start(callback(&Queue_LDR, &EventQueue::dispatch_forever));          // Start thread for the LDR
 }
