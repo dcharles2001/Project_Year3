@@ -89,7 +89,7 @@ int Dht11::readDHT11(){
     return DHT_OK;                          // If all is good in the checksum, return an OK
 }
 
-float Dht11::getFahrenheit(){
+int Dht11::getFahrenheit(){
     return((temperature * 1.8) + 32);       // Work out and return Fahrenheit
 }
 

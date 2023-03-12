@@ -12,7 +12,7 @@ class Dht11{
     public:
         void DHT11setup();              // function to setup Sensor
         int readDHT11();                // read the sensor data
-        float getFahrenheit();          // calculate the Fahrenheit temp
+        int getFahrenheit();          // calculate the Fahrenheit temp
         int getCelsius();               // return the Celsius temp
         int getHumidity();              // return the Humidity
     private:

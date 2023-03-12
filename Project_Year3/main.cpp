@@ -9,6 +9,9 @@
 using namespace std;
 static BufferedSerial serial_port(USBTX, USBRX);
 
+/////////////////////////////
+int TemperatureMeasurement = 0;                                 // Set to 0 for Celsius Set to 1 for Fahrenheit
+/////////////////////////////
 
 //Class defenitions
 Motors Motor;
@@ -37,15 +40,17 @@ void Motors(){                                                  // Read the Line
 void DHT11read(){  
     DHT11.DHT11setup();                                         // Read the Temp/Humidity sesnor
     DHT11.readDHT11();
-    int TEMP = DHT11.getCelsius();
-    //int TEMP = DHT11.getFahrenheit();
-    printf("T: %d, H: %d\r\n", TEMP, DHT11.getHumidity());
+    if (TemperatureMeasurement == 0){
+        printf("T: %d, H: %d\n\n", DHT11.getCelsius(), DHT11.getHumidity());
+    }else{
+        printf("T: %d, H: %d\n\n", DHT11.getFahrenheit(), DHT11.getHumidity());
+    }
 }
 
 void CO2read(){                                                 // Read the Environemntal Sensor and work out PPM
     CO2.ReadCO2();
     CO2.CalculatePartsPerMinute();
-    printf("Environmental Sensor Value %d\n\r", CO2.ppm); 
+    printf("Environmental Sensor Value %d\n", CO2.ppm); 
 }
 
 void LDRread(){                                                 // Read the LDR                                  
@@ -56,7 +61,12 @@ void LDRread(){                                                 // Read the LDR
 
 int main(){
     serial_port.set_baud(115200);                               // Set up the serial port to Baud 115200
-
+    serial_port.set_format(
+        /* bits */ 8,
+        /* parity */ BufferedSerial::None,
+        /* stop bit */ 1
+    );
+    
     Motor.motorSetup();                                         // Set up motor drivers
 
     Queue_Motor.call_every(100ms, Motors);                      // Call the motor function every 100ms
