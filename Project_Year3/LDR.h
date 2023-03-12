@@ -5,7 +5,8 @@
 
 class LDR{
     public:
-        void ReadLDR();
+        void LDRSetup();        // Setup the LDR
+        void ReadLDR();         // Read the LDR
         int LDR;
 };
 
