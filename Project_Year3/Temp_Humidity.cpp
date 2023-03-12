@@ -1,13 +1,13 @@
-#include "Temp&Humidity.h"
+#include "Temp_Humidity.h"
 DigitalInOut DHT11pin(D2);                  // Sensor pin
 
-void Dht11::DHT11setup(){
+void Temp_Humidity::DHT11setup(){
     DHT11Startup.start();                   // Start the setup timer
     temperature = 0;                        // Set temp to 0
     humidity = 0;                           // set humidity to 0
 }
 
-int Dht11::readDHT11(){
+int Temp_Humidity::readDHT11(){
     //Data receive buffer
     uint8_t bits[5];
     uint8_t count = 7;
@@ -55,8 +55,7 @@ int Dht11::readDHT11(){
             }
         }
 
-        Timer bitread;                      // Start timer for reading bits
-        bitread. start();
+        bitread. start();                   // Start timer for reading bits
 
         loop = 10000;
         while(DHT11pin == 1){               // give an error if the pin is stuck at 1 for more than 10000 loops
@@ -89,15 +88,15 @@ int Dht11::readDHT11(){
     return DHT_OK;                          // If all is good in the checksum, return an OK
 }
 
-float Dht11::getFahrenheit(){
+float Temp_Humidity::getFahrenheit(){
     return((temperature * 1.8) + 32);       // Work out and return Fahrenheit
 }
 
-int Dht11::getCelsius(){
+int Temp_Humidity::getCelsius(){
     return(temperature);                    // Return Celsius
 }
 
-int Dht11::getHumidity(){
+int Temp_Humidity::getHumidity(){
     return(humidity);                       // Return Humidity
 }
 

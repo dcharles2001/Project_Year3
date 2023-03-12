@@ -1,5 +1,5 @@
-#ifndef DHT11_H
-#define DHT11_H
+#ifndef TEMP_HUMIDITY_H
+#define TEMP_HUMIDITY_H
 
 #include "mbed.h"
 
@@ -8,7 +8,7 @@
 #define DHT_ERROR_CHECKSUM   -1
 #define DHT_ERROR_TIMEOUT    -2
 
-class Dht11{
+class Temp_Humidity{
     public:
         void DHT11setup();              // function to setup Sensor
         int readDHT11();                // read the sensor data
@@ -19,6 +19,7 @@ class Dht11{
         int humidity;
         int temperature;
         Timer DHT11Startup;             // Timer to give correct start
+        Timer bitread;                  // Timer to give the corect time for reading bits
 
 };
 
