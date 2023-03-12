@@ -9,13 +9,13 @@
 using namespace std;
 static BufferedSerial serial_port(USBTX, USBRX);
 
-//Dht11 DHT11pin(D2);
 
 //Class defenitions
 Motors Motor;
 CO2 CO2;
 LDR LDR;
 Dht11 DHT11;
+
 //Thread defenitions
 Thread Thread_Motor;
 Thread Thread_DHT11;
@@ -35,7 +35,7 @@ void Motors(){                                                  // Read the Line
 }
 
 void DHT11read(){  
-    DHT11.DHT11setup();                                                 // Read the Temp/Humidity sesnor
+    DHT11.DHT11setup();                                         // Read the Temp/Humidity sesnor
     DHT11.readDHT11();
     int TEMP = DHT11.getCelsius();
     //int TEMP = DHT11.getFahrenheit();
@@ -60,7 +60,7 @@ int main(){
     Motor.motorSetup();                                         // Set up motor drivers
 
     Queue_Motor.call_every(100ms, Motors);                      // Call the motor function every 100ms
-    Queue_DHT11.call_every(1s, DHT11read);                          // Call the Temp/Humidity sensor every 1s
+    Queue_DHT11.call_every(1s, DHT11read);                      // Call the Temp/Humidity sensor every 1s
     Queue_CO2.call_every(1s, CO2read);                          // Call the Environmental sensor every 1s
     Queue_LDR.call_every(1s, LDRread);                          // Call the LDR every 1s
 
