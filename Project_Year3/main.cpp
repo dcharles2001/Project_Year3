@@ -16,68 +16,60 @@ int TEMP;
 Motors Motor;
 CO2 CO2;
 LDR LDR;
-Temp_Humidity DHT11;
+Temp_Humidity Temp_Humidity;
 
 //Thread defenitions
 Thread Thread_Motor;
-Thread Thread_DHT11;
+Thread Thread_Temp_Humidity;
 Thread Thread_CO2;
 Thread Thread_LDR;
-Thread Thread_DataSend;
 
 //EventQueue setup
 EventQueue Queue_Motor(1 * EVENTS_EVENT_SIZE);
-EventQueue Queue_DHT11(1 * EVENTS_EVENT_SIZE);
+EventQueue Queue_Temp_Humidity(1 * EVENTS_EVENT_SIZE);
 EventQueue Queue_CO2(1 * EVENTS_EVENT_SIZE);
 EventQueue Queue_LDR(1 * EVENTS_EVENT_SIZE);
-EventQueue Queue_DataSend(1 * EVENTS_EVENT_SIZE);
 
 //Functions
-void Motors(){                                                  // Read the Line senors and move the motors to match
+void Motors(){
     Motor.LineFollowing();
     //Motor.motorsForward();
 }
 
-void DHT11read(){  
-    DHT11.DHT11setup();                                                 // Read the Temp/Humidity sesnor
-    DHT11.readDHT11();
-    TEMP = DHT11.getCelsius();
+void Temp_Humidityread(){  
+    Temp_Humidity.DHT11setup();                                                 // Read the Temp/Humidity sesnor
+    Temp_Humidity.readDHT11();
+    TEMP = Temp_Humidity.getCelsius();
     //TEMP = DHT11.getFahrenheit();
-    //printf("T: %d, H: %d\n\n", TEMP, DHT11.getHumidity());
+    printf("T: %d, H: %d\n\n", TEMP, Temp_Humidity.getHumidity());
 }
 
-void CO2read(){                                                 // Read the Environemntal Sensor and work out PPM
+void CO2read(){
     CO2.ReadCO2();
     CO2.CalculatePartsPerMinute();
-    //printf("Environmental Sensor Value %d\n", CO2.ppm); 
+    printf("Environmental Sensor Value %d\n", CO2.ppm); 
 }
 
-void LDRread(){                                                 // Read the LDR                                  
+void LDRread(){
     LDR.ReadLDR();
-    //printf("LDR: %d \n", LDR.LDR);
+    printf("LDR: %d \n", LDR.LDR);
 }
 
-void DataSend(){
-    printf("T: %d, H: %d\n", TEMP, DHT11.getHumidity());
-    printf("Environmental Sensor Value %d\n", CO2.ppm);
-    printf("LDR: %d \n\n", LDR.LDR);
-}
+
 
 
 int main(){
-    serial_port.set_baud(115200);                               // Set up the serial port to Baud 115200
+    // Set up the serial port to Baud 115200
+    serial_port.set_baud(115200);
 
-    Motor.motorSetup();                                         // Set up motor drivers
+    Motor.motorSetup();
+    Queue_Motor.call_every(1s, Motors);
+    Queue_Temp_Humidity.call_every(1s, Temp_Humidity);
+    Queue_CO2.call_every(1s, CO2read);
+    Queue_LDR.call_every(1s, LDRread);
 
-    Queue_Motor.call_every(100ms, Motors);                      // Call the motor function every 100ms
-    Queue_DHT11.call_every(1s, DHT11read);                      // Call the Temp/Humidity sensor every 1s
-    Queue_CO2.call_every(1s, CO2read);                          // Call the Environmental sensor every 1s
-    Queue_LDR.call_every(1s, LDRread);                          // Call the LDR function every 1s
-    Queue_DataSend.call_every(1s, DataSend);                    // Call the DataSend function every 1s
-
-    Thread_Motor.start(callback(&Queue_Motor, &EventQueue::dispatch_forever));      // Start thread for the motors
-    Thread_DHT11.start(callback(&Queue_DHT11, &EventQueue::dispatch_forever));      // Start thread for the Temp/Humidity Sensor
-    Thread_CO2.start(callback(&Queue_CO2, &EventQueue::dispatch_forever));          // Start thread for the Environmental Sensor
-    Thread_LDR.start(callback(&Queue_LDR, &EventQueue::dispatch_forever));          // Start thread for LDR
-    Thread_DataSend.start(callback(&Queue_DataSend, &EventQueue::dispatch_forever));          // Start thread for DataSending
+    Thread_Motor.start(callback(&Queue_Motor, &EventQueue::dispatch_forever));
+    Thread_Temp_Humidity.start(callback(&Queue_Temp_Humidity, &EventQueue::dispatch_forever));
+    Thread_CO2.start(callback(&Queue_CO2, &EventQueue::dispatch_forever));
+    Thread_LDR.start(callback(&Queue_LDR, &EventQueue::dispatch_forever));
 }

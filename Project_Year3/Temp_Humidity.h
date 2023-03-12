@@ -3,7 +3,6 @@
 
 #include "mbed.h"
 
-// DHT returns
 #define DHT_OK 0
 #define DHT_ERROR_CHECKSUM   -1
 #define DHT_ERROR_TIMEOUT    -2
@@ -22,5 +21,4 @@ class Temp_Humidity{
         Timer bitread;                  // Timer to give the corect time for reading bits
 
 };
-
 #endif

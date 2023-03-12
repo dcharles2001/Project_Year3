@@ -14,14 +14,12 @@ int Temp_Humidity::readDHT11(){
     uint8_t idx = 0;
 
     //Empty the buffer
-    for (int i=0; i<5; i++){
-        bits[i] = 0;
-    }
+    for (int i=0; i<5; i++) bits[i] = 0;
 
     while(DHT11Startup.read_ms() < 1100) {} // Blocking while loop because startup requires at leats 1 second before readings are avaliable
     DHT11Startup.stop();                    // Stop the setup timer
 
-    //Tell the sensor we are ready to read
+    //Tell the sensor we are ready to read, and set the pin to input
     DHT11pin.output();
     DHT11pin = 0;
     wait_us(18000);
@@ -29,18 +27,17 @@ int Temp_Humidity::readDHT11(){
     wait_us(40);
     DHT11pin.input();                       // Set the sensor to read
 
-
+    // ACKNOWLEDGE or TIMEOUT
     unsigned int loop = 10000;
-
     while(DHT11pin == 0){                   // give an error if the pin is stuck at 0 for more than 10000 loops
-        if (loop-- == 0){
+        if (loop-- == 0){                   
             return DHT_ERROR_TIMEOUT;
         }
     }
     loop = 10000;
 
-    while(DHT11pin == 1){                   // give an error if the pin is stuck at 1 for more than 10000 loops
-        if (loop-- == 0){
+    while(DHT11pin == 1){                  // give an error if the pin is stuck at 1 for more than 10000 loops
+        if (loop-- == 0){                   
             return DHT_ERROR_TIMEOUT;
         }
     }
@@ -50,11 +47,11 @@ int Temp_Humidity::readDHT11(){
     {
         loop = 10000;
         while(DHT11pin == 0){               // give an error if the pin is stuck at 0 for more than 10000 loops
-            if (loop-- == 0){
+            if (loop-- == 0){                
                 return DHT_ERROR_TIMEOUT;
             }
         }
-
+        
         bitread. start();                   // Start timer for reading bits
 
         loop = 10000;
