@@ -69,7 +69,7 @@ int main(){
     
     Motor.motorSetup();                                         // Set up motor drivers
 
-    Queue_Motor.call_every(1ms, Motors);                      // Call the motor function every 100ms
+    Queue_Motor.call_every(100ms, Motors);                      // Call the motor function every 100ms
     Queue_DHT11.call_every(1s, DHT11read);                      // Call the Temp/Humidity sensor every 1s
     Queue_CO2.call_every(1s, CO2read);                          // Call the Environmental sensor every 1s
     Queue_LDR.call_every(1s, LDRread);                          // Call the LDR every 1s
