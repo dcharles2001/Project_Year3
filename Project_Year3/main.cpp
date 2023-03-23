@@ -11,9 +11,7 @@ using namespace std;
 
 static BufferedSerial serial_port(USBTX, USBRX);
 static BufferedSerial UART(PE_8, PE_7);
-/////////////////////////////
-int TemperatureMeasurement = 0;                                 // Set to 0 for Celsius Set to 1 for Fahrenheit
-/////////////////////////////
+
 
 //Class defenitions
 Motors Motor;
@@ -35,19 +33,25 @@ EventQueue Queue_DHT11(1 * EVENTS_EVENT_SIZE);
 EventQueue Queue_CO2(1 * EVENTS_EVENT_SIZE);
 EventQueue Queue_LDR(1 * EVENTS_EVENT_SIZE);
 
-string T;
+string C;
+string F;
 string H;
-string SEND;
-string SENDc;
+string SEND1;
+string SEND2;
+string SEND3;
 string GAS;
 string LIGHT;
 
 void COMM(){
-    SEND = "-"+T+"-"+H+"-"+GAS+"\r\n";
-    SENDc = "-"+LIGHT+"\r\n";
-    UART.write(SEND.c_str(),sizeof(SEND));
-    wait_us(1100);
-    UART.write(SENDc.c_str(),sizeof(SENDc));
+    SEND1 = "-"+C+"-"+F+"\r\n";
+    SEND2 = "-"+H+"-"+GAS+"\r\n";
+    SEND3 = "-"+LIGHT+"\r\n";
+
+    UART.write(SEND1.c_str(),sizeof(SEND1));
+    //wait_us(1500);
+    UART.write(SEND2.c_str(),sizeof(SEND2));
+    //wait_us(1500);
+    UART.write(SEND3.c_str(),sizeof(SEND3));
 }
 //Functions
 void Motors(){                                                  // Read the Line senors and move the motors to match
@@ -58,15 +62,10 @@ void Motors(){                                                  // Read the Line
 void DHT11read(){  
     DHT11.DHT11setup();                                         // Read the Temp/Humidity sesnor
     DHT11.readDHT11();
-    if (TemperatureMeasurement == 0){
-        printf("T: %d, H: %d\n\n", DHT11.getCelsius(), DHT11.getHumidity());
-        T = to_string(DHT11.getCelsius());
-        H = to_string(DHT11.getHumidity());
-    }else{
-        printf("T: %d, H: %d\n\n", DHT11.getFahrenheit(), DHT11.getHumidity());
-        T = to_string(DHT11.getFahrenheit());
-        H = to_string(DHT11.getHumidity());
-    }
+    printf("C: %d, F: %d, H: %d\n\n", DHT11.getCelsius(), DHT11.getFahrenheit(), DHT11.getHumidity());
+    C = to_string(DHT11.getCelsius());
+    H = to_string(DHT11.getHumidity());
+    F = to_string(DHT11.getFahrenheit());
 }
 
 void CO2read(){                                                 // Read the Environemntal Sensor and work out PPM

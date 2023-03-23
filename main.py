@@ -7,9 +7,10 @@ from time import sleep
 from picozero import pico_temp_sensor, pico_led
 
 
-ssid = 'VM7267268'
-password = 'xtj5fbkmKbLx'
-
+#ssid = 'VM7267268'
+#password = 'xtj5fbkmKbLx'
+ssid = 'You Dont Need This'
+password = 'razpipicow'
 
 uart = machine.UART(1, 9600, tx=machine.Pin(8), rx = machine.Pin(9))
 uart.init(9600, bits=8, parity=None, stop=1)
@@ -38,7 +39,7 @@ def open_socket(ip):
     connection.listen(1)
     return connection
     
-def webpage(temperature, humidity, CO2, light, state):
+def webpage(temperatureC, temperatureF, humidity, CO2, light, state):
     #Template HTML
     html = f"""
             <!DOCTYPE html>
@@ -51,10 +52,14 @@ def webpage(temperature, humidity, CO2, light, state):
             <input type="submit" value="Light off" />
             </form>
             <p>LED is {state}</p>
-            <p>Temperature is {temperature}</p>
-            <p>Humidity is {humidity}</p>
-            <p>CO2 ppm is {CO2}</p>
-            <p>Light value is {light}</p>
+            <p> </p>
+            <p> </p>
+            <p> </p>
+            <p>The Temperature is {temperatureC} Celceus</p>
+            <p>The Temperature is {temperatureF} Fahrenheit</p>
+            <p>The Humidity is {humidity}g/Kg</p>
+            <p>The CO2 levels are {CO2} ppm</p>
+            <p>The Light value is {light}</p>
             </body>
             </html>
             """
@@ -64,7 +69,9 @@ def serve(connection):
     #Start a web server
     state = 'ON'
     pico_led.on()
-    temperature = 0
+    
+    temperatureC = 0
+    temperatureF = 0
     humidity = 0
     CO2 = 0
     light = 0
@@ -82,12 +89,18 @@ def serve(connection):
             msg  = b.decode('utf-8')
             print(msg)
             messagelist = msg.split("-")
+            
             if i == 0:
-                temperature = messagelist[1]
-                humidity = messagelist[2]
-                CO2 = messagelist[3]
-                i = 1 
+                temperatureC = messagelist[1]
+                temperatureF = messagelist[2]
+                i = 1
+                
             elif i == 1:
+                humidity = messagelist[1]
+                CO2 = messagelist[2]
+                i = 2
+                
+            elif i == 2:
                 light = messagelist[1]
                 i = 0
             
@@ -98,7 +111,7 @@ def serve(connection):
             pico_led.on()
             state = 'ON'
             
-        html = webpage(temperature, humidity, CO2, light, state)
+        html = webpage(temperatureC, temperatureF, humidity, CO2, light, state)
         client.send(html)
         
         client.close()
