@@ -1,6 +1,6 @@
 #include "LDR.h"
 
-AnalogIn LDRIN(A1);
+AnalogIn LDRIN(A0);
 
 void LDR::LDRSetup(){
     LDR = 0;                    // Set LDR to 0;

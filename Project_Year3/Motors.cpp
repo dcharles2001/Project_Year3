@@ -14,7 +14,7 @@ PwmOut motorRB(D5);
 DigitalOut EnableRight(D6);    //////// Note to self: Black dot
 
 static float DutyCycle = 0.2;       // 0.2 second duty cycle
-static float ActiveCycle = 0.50;    // period of activeness
+static float ActiveCycle = 0.4;    // period of activeness
 
 void Motors::motorSetup(){          //Set motor driver enable pins to 1
     EnableRight = 1;

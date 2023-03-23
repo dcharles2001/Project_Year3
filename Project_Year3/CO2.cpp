@@ -1,5 +1,5 @@
 #include "CO2.h"
-AnalogIn Co2(A0);                              // Sensor Pin
+AnalogIn Co2(A1);                              // Sensor Pin
 
 void CO2::CO2setup(){
     ppm = 0;                                   // Set the PPm to 0

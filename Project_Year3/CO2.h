@@ -8,7 +8,7 @@ class CO2{
         void CO2setup();                             // Setup the Environmental sensor
         void ReadCO2();                              // Function to read the sensor
         void CalculatePartsPerMinute();              // Function to calculate PPM
-        uint16_t ppm;                                // Parts Per minute
+        int ppm;                                // Parts Per minute
     private:
         uint16_t CO2data;                            // Sesnor Data
         const double Rl = 5000.0;                    // Load resistance
