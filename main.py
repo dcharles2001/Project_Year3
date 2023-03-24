@@ -3,14 +3,14 @@ import os
 import machine
 import network
 import socket
+import time
 from time import sleep
 from picozero import pico_temp_sensor, pico_led
 
 
-#ssid = 'VM7267268'
-#password = 'xtj5fbkmKbLx'
-ssid = 'You Dont Need This'
-password = 'razpipicow'
+ssid = 'VM7267268'
+password = 'xtj5fbkmKbLx'
+
 
 uart = machine.UART(1, 9600, tx=machine.Pin(8), rx = machine.Pin(9))
 uart.init(9600, bits=8, parity=None, stop=1)
@@ -24,9 +24,16 @@ def connect():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(ssid, password)
+    timer = time.time()
     while wlan.isconnected() == False:
+        seconds = time.time()
         print('Waiting for connection...')
-        sleep(1)
+        timeout = seconds - timer
+        print(timeout)
+        if timeout > 10:
+            machine.reset()
+        else:
+            sleep(1)
     ip = wlan.ifconfig()[0]
     print(f'Connected on {ip}')
     return ip
@@ -43,7 +50,7 @@ def webpage(temperatureC, temperatureF, humidity, CO2, light, state):
     #Template HTML
     html = f"""
             <!DOCTYPE html>
-            <meta http-equiv="refresh" content="10" >
+            <meta http-equiv="refresh" content="8" >
             <html>
             <form action="./lighton">
             <input type="submit" value="Light on" />
@@ -52,13 +59,10 @@ def webpage(temperatureC, temperatureF, humidity, CO2, light, state):
             <input type="submit" value="Light off" />
             </form>
             <p>LED is {state}</p>
-            <p> </p>
-            <p> </p>
-            <p> </p>
-            <p>The Temperature is {temperatureC} Celceus</p>
-            <p>The Temperature is {temperatureF} Fahrenheit</p>
+            <p>The Temperature is {temperatureC}Celsius</p>
+            <p>The Temperature is {temperatureF}Fahrenheit</p>
             <p>The Humidity is {humidity}g/Kg</p>
-            <p>The CO2 levels are {CO2} ppm</p>
+            <p>The CO2 levels are {CO2}ppm</p>
             <p>The Light value is {light}</p>
             </body>
             </html>
@@ -69,7 +73,6 @@ def serve(connection):
     #Start a web server
     state = 'ON'
     pico_led.on()
-    
     temperatureC = 0
     temperatureF = 0
     humidity = 0
@@ -89,17 +92,13 @@ def serve(connection):
             msg  = b.decode('utf-8')
             print(msg)
             messagelist = msg.split("-")
-            
             if i == 0:
                 temperatureC = messagelist[1]
                 temperatureF = messagelist[2]
                 i = 1
-                
             elif i == 1:
                 humidity = messagelist[1]
                 CO2 = messagelist[2]
-                i = 2
-                
             elif i == 2:
                 light = messagelist[1]
                 i = 0
