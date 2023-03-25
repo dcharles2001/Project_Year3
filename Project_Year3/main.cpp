@@ -12,7 +12,8 @@ using namespace std;
 static BufferedSerial serial_port(USBTX, USBRX);
 static BufferedSerial UART(PE_8, PE_7);
 
-
+DigitalOut PiReset(D0);
+Timer tick;
 //Class defenitions
 Motors Motor;
 CO2 CO2;
@@ -52,6 +53,15 @@ void COMM(){
     UART.write(SEND2.c_str(),sizeof(SEND2));
     //wait_us(1500);
     UART.write(SEND3.c_str(),sizeof(SEND3));
+    int d = tick.read();
+    printf("%d\n",d);
+    if (tick.read()>600){
+        PiReset = 0;
+        wait_us(100000);
+        PiReset = 1;
+        printf("Reset timer\n");
+        tick.reset();
+    }
 }
 //Functions
 void Motors(){                                                  // Read the Line senors and move the motors to match
@@ -83,6 +93,7 @@ void LDRread(){                                                 // Read the LDR
 
 
 int main(){
+    tick.start();
     serial_port.set_baud(115200);                               // Set up the serial port to Baud 115200
     serial_port.set_format(
         /* bits */ 8,

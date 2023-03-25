@@ -26,8 +26,8 @@ def connect():
     wlan.connect(ssid, password)
     timer = time.time()
     while wlan.isconnected() == False:
-        seconds = time.time()
         print('Waiting for connection...')
+        seconds = time.time()
         timeout = seconds - timer
         print(timeout)
         if timeout > 10:
@@ -50,7 +50,7 @@ def webpage(temperatureC, temperatureF, humidity, CO2, light, state):
     #Template HTML
     html = f"""
             <!DOCTYPE html>
-            <meta http-equiv="refresh" content="8" >
+            <meta http-equiv="refresh" content="10" >
             <html>
             <form action="./lighton">
             <input type="submit" value="Light on" />
@@ -79,30 +79,40 @@ def serve(connection):
     CO2 = 0
     light = 0
     i = 0
+    timer = time.time()
     while True:
         client = connection.accept()[0]
         request = client.recv(1024)
         request = str(request)
-        try:
-            request = request.split()[1]
-        except IndexError:
-            pass
-        if uart.any():
-            b = uart.readline()
-            msg  = b.decode('utf-8')
-            print(msg)
-            messagelist = msg.split("-")
-            if i == 0:
-                temperatureC = messagelist[1]
-                temperatureF = messagelist[2]
-                i = 1
-            elif i == 1:
-                humidity = messagelist[1]
-                CO2 = messagelist[2]
-            elif i == 2:
-                light = messagelist[1]
-                i = 0
-            
+        
+        seconds = time.time()
+        timeout = seconds - timer
+        print(timeout)
+        if timeout > 20:
+            machine.reset()
+        else:
+            try:
+                request = request.split()[1]
+            except IndexError:
+                pass
+            if uart.any():
+                b = uart.readline()
+                msg  = b.decode('utf-8')
+                print(msg)
+                timer = time.time()
+                messagelist = msg.split("-")
+                if i == 0:
+                    temperatureC = messagelist[1]
+                    temperatureF = messagelist[2]
+                    i = 1
+                elif i == 1:
+                    humidity = messagelist[1]
+                    CO2 = messagelist[2]
+                    i = 2
+                elif i == 2:
+                    light = messagelist[1]
+                    i = 0
+                
         if request =='/lightoff?':
             pico_led.off()
             state = 'OFF'
