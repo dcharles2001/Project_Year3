@@ -8,9 +8,10 @@ from time import sleep
 from picozero import pico_temp_sensor, pico_led
 
 
-ssid = 'VM7267268'
-password = 'xtj5fbkmKbLx'
-
+#ssid = 'VM7267268'
+#password = 'xtj5fbkmKbLx'
+ssid = 'You Dont Need This'
+password = 'razpipicow'
 
 uart = machine.UART(1, 9600, tx=machine.Pin(8), rx = machine.Pin(9))
 uart.init(9600, bits=8, parity=None, stop=1)

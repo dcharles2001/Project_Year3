@@ -7,13 +7,15 @@
 #include <iostream>
 #include <chrono>
 #include <string>
+
 using namespace std;
 
 static BufferedSerial serial_port(USBTX, USBRX);
 static BufferedSerial UART(PE_8, PE_7);
 
-DigitalOut PiReset(D0);
+
 Timer tick;
+DigitalOut myservo(D0);
 //Class defenitions
 Motors Motor;
 CO2 CO2;
@@ -55,10 +57,11 @@ void COMM(){
     UART.write(SEND3.c_str(),sizeof(SEND3));
     int d = tick.read();
     printf("%d\n",d);
-    if (tick.read()>600){
-        PiReset = 0;
-        wait_us(100000);
-        PiReset = 1;
+    if (d>50){
+        myservo = 1;
+        wait_us(1000000);
+        myservo = 0;
+        wait_us(20000000 - 1000000);
         printf("Reset timer\n");
         tick.reset();
     }
@@ -81,8 +84,8 @@ void DHT11read(){
 void CO2read(){                                                 // Read the Environemntal Sensor and work out PPM
     CO2.ReadCO2();
     CO2.CalculatePartsPerMinute();
-    printf("Environmental Sensor Value %d\n", CO2.ppm);
-    GAS = to_string(CO2.ppm);
+    printf("Environmental Sensor Value %d\n",CO2.ppm);
+    GAS = to_string(0);//CO2.ppm);
 }
 
 void LDRread(){                                                 // Read the LDR                                  
