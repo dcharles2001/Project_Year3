@@ -119,7 +119,7 @@ int main(){
     Queue_LDR.call_every(1s, LDRread);                          // Call the LDR every 1s
     Queue_COMM.call_every(10s, COMM);                            // Call the COMM function every 1s
 
-    //Thread_Motor.start(callback(&Queue_Motor, &EventQueue::dispatch_forever));      // Start thread for the motors
+    Thread_Motor.start(callback(&Queue_Motor, &EventQueue::dispatch_forever));      // Start thread for the motors
     Thread_DHT11.start(callback(&Queue_DHT11, &EventQueue::dispatch_forever));      // Start thread for the Temp/Humidity Sensor
     Thread_CO2.start(callback(&Queue_CO2, &EventQueue::dispatch_forever));          // Start thread for the Environmental Sensor
     Thread_LDR.start(callback(&Queue_LDR, &EventQueue::dispatch_forever));          // Start thread for the LDR

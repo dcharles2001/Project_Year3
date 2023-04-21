@@ -1,5 +1,5 @@
 #include "Temp&Humidity.h"
-DigitalInOut DHT11pin(D8);                  // Sensor pin
+DigitalInOut DHT11pin(D9);                  // Sensor pin
 
 void Dht11::DHT11setup(){
     DHT11Startup.start();                   // Start the setup timer

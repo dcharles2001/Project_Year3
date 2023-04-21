@@ -5,13 +5,13 @@ DigitalIn LeftLF(D15);
 DigitalIn RightLF(D14);
 
 //////Motor Pins
-PwmOut motorLA(D11);
-PwmOut motorLB(D10);
-DigitalOut EnableLeft(D9);
+PwmOut motorLA(D10);
+PwmOut motorLB(PB_5);
+DigitalOut EnableLeft(D11);
 
-PwmOut motorRA(D3);
+PwmOut motorRA(D6);
 PwmOut motorRB(D5);
-DigitalOut EnableRight(D6);    //////// Note to self: Black dot
+DigitalOut EnableRight(D7);   
 
 static float DutyCycle = 0.2;       // 0.2 second duty cycle
 static float ActiveCycle = 0.4;    // period of activeness
@@ -31,35 +31,35 @@ void Motors::motorsForward(){       // Set both sides to forward
     motorLB.write(0.0f);
     motorRA.write(0.0f);
     motorRB.write(ActiveCycle);
-    //printf("Forward\n\r");
+    printf("Forward\n\r");
 }
 void Motors::motorsBackward(){      // Set both sides to Backward
     motorLA.write(0.0f);
     motorLB.write(ActiveCycle);
     motorRA.write(ActiveCycle);
     motorRB.write(0.0f);
-    //printf("Backward\n\r");
+    printf("Backward\n\r");
 }
 void Motors::motorsStop(){          // Stop the motors
     motorLA.write(0.0f);
     motorLB.write(0.0f);
     motorRA.write(0.0f);
     motorRB.write(0.0f);
-    //printf("Stop\n\r");
+    printf("Stop\n\r");
 }
 void Motors::motorsLeft(){          // Stop the left side motors and go forward on the right side (Turn Left)
     motorLA.write(0.0f);
     motorLB.write(ActiveCycle);
     motorRA.write(0.0f);
     motorRB.write(ActiveCycle);
-    //printf("Left\n\r");
+    printf("Left\n\r");
 }
 void Motors::motorsRight(){         // Stop the right side motors and go forward on the left side (Turn Right)
     motorLA.write(ActiveCycle);
     motorLB.write(0.0f);
     motorRA.write(ActiveCycle);
     motorRB.write(0.0f);
-    //printf("Right\r\n");
+    printf("Right\r\n");
 }
 
 
