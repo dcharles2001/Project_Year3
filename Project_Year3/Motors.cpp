@@ -6,7 +6,7 @@ DigitalIn RightLF(D14);
 
 //////Motor Pins
 PwmOut motorLA(D10);
-PwmOut motorLB(PB_5);
+PwmOut motorLB(PB_3);
 DigitalOut EnableLeft(D11);
 
 PwmOut motorRA(D6);
@@ -38,7 +38,7 @@ void Motors::motorsBackward(){      // Set both sides to Backward
     motorLB.write(ActiveCycle);
     motorRA.write(ActiveCycle);
     motorRB.write(0.0f);
-    printf("Backward\n\r");
+    //printf("Backward\n\r");
 }
 void Motors::motorsStop(){          // Stop the motors
     motorLA.write(0.0f);
@@ -48,17 +48,17 @@ void Motors::motorsStop(){          // Stop the motors
     printf("Stop\n\r");
 }
 void Motors::motorsLeft(){          // Stop the left side motors and go forward on the right side (Turn Left)
-    motorLA.write(0.0f);
-    motorLB.write(ActiveCycle);
-    motorRA.write(0.0f);
-    motorRB.write(ActiveCycle);
-    printf("Left\n\r");
-}
-void Motors::motorsRight(){         // Stop the right side motors and go forward on the left side (Turn Right)
     motorLA.write(ActiveCycle);
     motorLB.write(0.0f);
     motorRA.write(ActiveCycle);
     motorRB.write(0.0f);
+    printf("Left\n\r");
+}
+void Motors::motorsRight(){         // Stop the right side motors and go forward on the left side (Turn Right)
+    motorLA.write(0.0f);
+    motorLB.write(ActiveCycle);
+    motorRA.write(0.0f);
+    motorRB.write(ActiveCycle);
     printf("Right\r\n");
 }
 
