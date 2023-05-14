@@ -8,10 +8,10 @@ from time import sleep
 from picozero import pico_temp_sensor, pico_led
 
 
-#ssid = 'VM7267268'
-#password = 'xtj5fbkmKbLx'
-ssid = 'You Dont Need This'
-password = 'razpipicow'
+ssid = 'VM7267268'
+password = 'xtj5fbkmKbLx'
+#ssid = 'You Dont Need This'
+#password = 'razpipicow'
 
 uart = machine.UART(1, 9600, tx=machine.Pin(8), rx = machine.Pin(9))
 uart.init(9600, bits=8, parity=None, stop=1)
@@ -41,12 +41,12 @@ def connect():
 
 def open_socket(ip):
     # Open a socket
-    address = (ip, 80)
+    address = (ip, 8888)
     connection = socket.socket()
     connection.bind(address)
     connection.listen(1)
     return connection
-    
+'''    
 def webpage(temperatureC, temperatureF, humidity, CO2, light, state):
     #Template HTML
     html = f"""
@@ -125,7 +125,16 @@ def serve(connection):
         client.send(html)
         
         client.close()
-        
+'''
+
+def serve(connection):
+    client = connection.accept()[0]
+    #request = client.recv(1024)
+    client.send("Hello World!")
+    pico_led.on()
+    client.close()
+   
+
 try:
     ip = connect()
     connection = open_socket(ip)

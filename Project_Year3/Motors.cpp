@@ -6,7 +6,7 @@ DigitalIn RightLF(D14);
 
 //////Motor Pins
 PwmOut motorLA(D10);
-PwmOut motorLB(PB_3);
+PwmOut motorLB(PB_5);
 DigitalOut EnableLeft(D11);
 
 PwmOut motorRA(D6);
@@ -27,11 +27,11 @@ void Motors::motorSetup(){          //Set motor driver enable pins to 1
 }
 
 void Motors::motorsForward(){       // Set both sides to forward
-    motorLA.write(ActiveCycle);
-    motorLB.write(0.0f);
-    motorRA.write(0.0f);
-    motorRB.write(ActiveCycle);
-    printf("Forward\n\r");
+    motorLA.write(0.0f);
+    motorLB.write(ActiveCycle);
+    motorRA.write(ActiveCycle);
+    motorRB.write(0.0f);
+    //printf("Forward\n\r");
 }
 void Motors::motorsBackward(){      // Set both sides to Backward
     motorLA.write(0.0f);
@@ -45,21 +45,21 @@ void Motors::motorsStop(){          // Stop the motors
     motorLB.write(0.0f);
     motorRA.write(0.0f);
     motorRB.write(0.0f);
-    printf("Stop\n\r");
+    //printf("Stop\n\r");
 }
 void Motors::motorsLeft(){          // Stop the left side motors and go forward on the right side (Turn Left)
     motorLA.write(ActiveCycle);
     motorLB.write(0.0f);
     motorRA.write(ActiveCycle);
     motorRB.write(0.0f);
-    printf("Left\n\r");
+    //printf("Left\n\r");
 }
 void Motors::motorsRight(){         // Stop the right side motors and go forward on the left side (Turn Right)
     motorLA.write(0.0f);
     motorLB.write(ActiveCycle);
     motorRA.write(0.0f);
     motorRB.write(ActiveCycle);
-    printf("Right\r\n");
+    //printf("Right\r\n");
 }
 
 
@@ -71,10 +71,10 @@ void Motors::LineFollowing(){       // Depending on the status of the line finde
     if (!LeftLF && !RightLF){
         motorsForward();
     }
-    if (!LeftLF && RightLF){
+    if (LeftLF && !RightLF){
         motorsRight();
     }
-    if (LeftLF && !RightLF){
+    if (!LeftLF && RightLF){
         motorsLeft();
     }
 }
