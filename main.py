@@ -28,13 +28,17 @@ i = 0
 
 sock = socket.socket()
 while True:
-    try:
-        sock.connect(('192.168.0.54', 8888))
-    except Exception:
-        print('Cannot Connect')
-        time.sleep(1)
-        continue
-    break
+    if (i == 10):
+        machine.reset()
+    else:
+        try:
+            sock.connect(('192.168.0.54', 8888))
+        except Exception:
+            print('Cannot Connect')
+            i+=1
+            time.sleep(1)
+            continue
+        break
     
 print('Connected')
 
